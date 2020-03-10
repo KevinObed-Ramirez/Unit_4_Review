@@ -5,8 +5,8 @@
    Tutorial 11
    Review Assignment
 
-   Author: 
-   Date:   
+   Author: Kevin Ramirez
+   Date:   3-9-20
 
    Global Variables
    ================
@@ -47,7 +47,26 @@
 	
 */
 
+var allCells = 
 
+function startUp(){
+   //displays the content of puzzle 1
+   document.getElementById("puzzleTitle")= "puzzle1";
+   document.getElementById("puzzle")= drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating );
+
+   var puzzleButtons = document.getElementsByClassName("puzzles");
+
+   for(var i = 0; i < puzzleButtons.length; i++){
+      puzzleButtons[i].onclick = switchPuzzle();
+   }
+
+   setupPuzzle();
+
+}
+//changes the puzzle
+function switchPuzzle(){
+   
+}
 
 
 
