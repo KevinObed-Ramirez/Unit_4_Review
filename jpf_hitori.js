@@ -47,26 +47,109 @@
 	
 */
 
-var allCells = 
+var allCells ;
+window.onload = startUp;
 
 function startUp(){
    //displays the content of puzzle 1
-   document.getElementById("puzzleTitle")= "puzzle1";
-   document.getElementById("puzzle")= drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating );
+   document.getElementById("puzzleTitle").innerHTML = "puzzle1";
+   document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating );
 
    var puzzleButtons = document.getElementsByClassName("puzzles");
 
    for(var i = 0; i < puzzleButtons.length; i++){
-      puzzleButtons[i].onclick = switchPuzzle();
+      puzzleButtons[i].onclick = switchPuzzle;
    }
 
    setupPuzzle();
 
 }
 //changes the puzzle
-function switchPuzzle(){
-   
+function switchPuzzle(e){
+   if(confirm("Are You Sure You Want To Switch Puzzles?")){
+      var puzzleID = e.target.id;
+      document.getElementById("puzzleTitle").innerHTML = e.target.value;
+      switch(puzzleID){
+         case("puzzle1"):
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori1Numbers, hitori1Blocks, hitori1Rating)
+            break;
+         case("puzzle2"):
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori2Numbers, hitori2Blocks, hitori2Rating)
+            break;
+         case("puzzle3"):
+            document.getElementById("puzzle").innerHTML = drawHitori(hitori3Numbers, hitori3Blocks, hitori3Rating)
+            break;
+      }
+      setupPuzzle();
+   }
 }
+
+function setupPuzzle(){
+   allCells = document.querySelectorAll("table#hitoriGrid td");
+   for(var i = 0; i < allCells.length; i++){
+      allCells[i].style.backgroundColor = "white";
+      allCells[i].style.color = "black";
+      allCells[i].style.borderRadius = "0";
+      // when you click down it changes the cell when you press on the keys or whenever you click
+      allCells[i].addEventListener("mousedown", 
+         function(e){
+            if(e.shiftKey){
+               e.target.style.backgroundColor = "white";
+               e.target.style.color = "black";
+               e.target.style.borderRadius = "0";
+            }else if(e.altKey){
+               e.target.style.backgroundColor = "black";
+               e.target.style.color = "white";
+               e.target.style.borderRadius = "0";
+            }else{
+               e.target.style.backgroundColor = "rgb(101, 101, 101)";
+               e.target.style.color = "white";
+               e.target.style.borderRadius = "50%";
+            }
+            e.preventDefault();
+         }
+      );
+      // added a eventlistener when the mouse hovers over the puzzle and changes the cursor
+      allCells[i].addEventListener("mouseover", 
+         function(e){
+            if(e.shiftKey){
+               e.target.style.cursor = "url(jpf_eraser.png), alias";
+            }else if(e.altKey){
+               e.target.style.cursor = "url(jpf_block.png), cell";
+            }else{
+               e.target.style.cursor = "url(jpf_circle.png), pointer";
+            }
+         }
+      );
+      // add a listener to check the solution
+      allCells[i].addEventListener("mouseup", checkSolution);
+   }
+}
+// find the ones that are wrong and mark them with red font
+function findErrors(){
+   for(var i = 0; i < allCells.length; i++){
+      if(
+         (allCells[i].className === "blocks" && allCells[i].style.backgroundColor === ("rgb(101, 101, 101)"))
+         ||
+         (allCells[i].className === "circles" && allCells[i].style.backgroundColor === ("black"))
+      ){
+         allCells[i].style.color = "red"
+      }
+   }
+   // sets a time interval to when it stop showing the ones wrong
+   setTimeout(
+      function(){
+         for(var i = 0; i < allCells.length; i++){
+            if(allCells[i].style.color === "red"){
+               allCells[i].style.color = "white"
+            }
+         }
+      }
+   , 500);
+}
+
+
+
 
 
 
